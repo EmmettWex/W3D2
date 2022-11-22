@@ -2,6 +2,8 @@ require_relative "card.rb"
 
 class Board
 
+    attr_reader :grid
+
     def initialize(n)
         @size = n * n
         @grid = Array.new(n) {Array.new(n)}
@@ -66,6 +68,14 @@ class Board
             card.hide
         end
         true
+    end
+
+    def count
+        count = 0
+        @grid.each do |sub|
+            sub.each { |card| count += 1 if card.facing? == true }
+        end
+        count
     end
 
     def hide_all
