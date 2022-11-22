@@ -1,10 +1,14 @@
 class Card
 
-    attr_reader :facing, :face_value
+    attr_reader :face_value
 
     def initialize(face_value)
         @facing = true
         @face_value = face_value
+    end
+
+    def facing?
+        @facing
     end
 
     def hide
@@ -19,7 +23,7 @@ class Card
         if @facing
             return @face_value.to_s
         else
-            return ""
+            return " "
         end
     end
 end
