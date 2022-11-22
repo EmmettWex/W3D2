@@ -1,20 +1,18 @@
 class Card
 
-    attr_reader :facing, :face_value, :face_down, :face_up
+    attr_reader :facing, :face_value
 
-    def initialize(face_value, face_up, face_down)
-        @face_up = face_up
-        @face_down = face_down
-        @facing = face_up
+    def initialize(face_value)
+        @facing = true
         @face_value = face_value
     end
 
     def hide
-        @facing = @face_down
+        @facing = false
     end
 
     def reveal
-        @facing = @face_up
+        @facing = true
     end
 
     def display
