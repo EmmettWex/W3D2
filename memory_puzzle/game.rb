@@ -1,6 +1,7 @@
 require_relative "board.rb"
 require_relative "card.rb"
 require_relative "human_player.rb"
+require_relative "computer_player.rb"
 
 class Game
     
@@ -49,7 +50,7 @@ class Game
             puts `clear`
             @board.render
             p "remember the board"
-            sleep 4
+            sleep 2
             if @board[pos].face_value != @board[@prev_guess].face_value
                 @board.hide(pos)
                 @board.hide(@prev_guess)
@@ -59,7 +60,8 @@ class Game
     end
 
     def play
-        # start
+        @player.start
+        sleep 4
         @board.populate
         puts `clear`
         @board.render
@@ -75,7 +77,10 @@ class Game
             @board.render
         end
 
-        p "WIN!"
+        if @player.is_a?(ComputerPlayer)
+            p '01011001 01101111 01110101 00100000 01010111 01101001 01101110 00100001'
+        else
+            p "WIN!"
+        end
     end
-
 end

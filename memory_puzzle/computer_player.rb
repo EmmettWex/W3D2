@@ -1,7 +1,13 @@
+require_relative "game.rb"
+
+#sometimes guesses the same wrong guess a few times in a row for some reason, i dunno. it works!
+
 class ComputerPlayer
 
+    attr_reader :known_cards, :matched_cards
+
     def initialize
-        @known_cards = Hash.new {[]}
+        @known_cards = Hash.new { |h,k| h[k] = [] }
         @matched_cards = Hash.new 
     end
 
@@ -10,83 +16,113 @@ class ComputerPlayer
     end
 
     def receive_revealed_card(pos, value)
-        @known_cards[value] << pos 
+        if @known_cards[value] != pos
+            @known_cards[value] << pos
+        end
     end 
 
-    def receive_match
+    def receive_match?
         @known_cards.each() do |k, v|
-            @matched_cards[k] = v if v.length == 2
+            if v.length == 2
+                @matched_cards[k] = v
+                return true
+            end
         end
+        false
     end
 
     def check_matched(board)
         @matched_cards.each() do |k,v|
             if board[v[0]].facing? == true && board[v[1]].facing? == true
                 @matched_cards.delete(k)
+                @known_cards.delete(k)
             end
         end
     end
 
     def get_pos(board)
+
         if board.count.even?
+
+            receive_match?
             check_matched(board)
+
             if @matched_cards.length() > 0
-                @matched.each do |k,v|
-                    pos = v[0]
+                @matched_cards.each do |k,v|
+                    return v[0]
                 end
+
             else
+
                 valid = false
+
                 while !valid
-                    row = rand(0...board.length)
-                    col = rand(0...board.length)
-                    if board[row][col].facing? == true
-                        valid = false
-                    else
-                        pos = [row,col]
+
+                    row = rand(0...board.grid.length)
+                    col = rand(0...board.grid.length)
+                    pos = [row,col]
+
+                    if board[pos].facing? != true
+
                         receive_revealed_card(pos, board[pos].face_value)
-                        receive_match
+                        receive_match?
+                        return pos
                         valid = true
+
                     end
                 end
             end
         end
+
         if board.count.odd?
+
+            receive_match?
+            check_matched(board)
+
             if @matched_cards.length() > 0
-                @matched.each do |k,v|
-                    pos = v[1]
+
+                @matched_cards.each do |k,v|
+                    if board[v[0]].facing? == true
+                        return v[1]
+                    else
+                        return v[0]
+                    end
+
                 end
-            elsif 
-                receive_match
 
-                
+            elsif receive_match?
+
+                @matched_cards.each do |k,v|
+                    if board[v[0]].facing? == true
+                        return v[1]
+                    else
+                        return v[0]
+                    end
+
+                end
+
+            else
+
+                valid = false
+
+                while !valid
+
+                    row = rand(0...board.grid.length)
+                    col = rand(0...board.grid.length)
+                    pos = [row,col]
+
+                    if board[pos].facing? != true
+
+                        receive_revealed_card(pos, board[pos].face_value)
+                        receive_match?
+                        return pos
+                        valid = true
+
+                    end
+                end
             end
         end
     end
-
-
-
-
-
-
-    def get_pos(board)
-        if first turn 
-            if matched pair
-                guess matched[0]
-            else
-                guess randomly
-            end
-        end
-        if second turn
-            if matched pair
-                guess matched[1]
-            elsif random first guess value == known value_key?
-                guess known_value[key]
-            else
-                guess random
-            end
-        end
-    end
-
 end
 
 
