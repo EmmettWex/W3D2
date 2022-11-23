@@ -7,7 +7,6 @@ class Board
     def initialize(n)
         @size = n * n
         @grid = Array.new(n) {Array.new(n)}
-
     end
 
     def populate

@@ -8,6 +8,7 @@ class Game
     attr_reader :board
 
     def initialize(n, name = "")
+        n += 1 if n.odd? 
         @board = Board.new(n)
         @prev_guess = []
         if name == ""
